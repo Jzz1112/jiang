@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VALORANT SNAKE · 无畏贪吃蛇</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <div class="wrapper">
+    <header>
+      <div class="logo-line">
+        <span class="logo-icon"></span>
+        <h1>VALORANT <em>SNAKE</em></h1>
+      </div>
+      <p class="subtitle">// 战术贪吃蛇 · TACTICAL SNAKE PROTOCOL</p>
+    </header>
+
+    <div class="hud">
+      <div class="hud-item clip-l">
+        <span class="hud-label">击杀 KILLS</span>
+        <span class="hud-value" id="score">0</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">最佳记录 BEST</span>
+        <span class="hud-value" id="highScore">0</span>
+      </div>
+      <div class="hud-item clip-r">
+        <span class="hud-label">回合 ROUND</span>
+        <span class="hud-value" id="speed">1</span>
+      </div>
+    </div>
+
+    <div class="stage">
+      <span class="corner tl"></span><span class="corner tr"></span>
+      <span class="corner bl"></span><span class="corner br"></span>
+
+      <canvas id="game" width="400" height="400"></canvas>
+
+      <!-- 开始 / 暂停 / 结束 遮罩层 -->
+      <div class="overlay" id="overlay">
+        <div class="overlay-card">
+          <div class="overlay-tag" id="overlayTag">// MATCH START</div>
+          <h2 id="overlayTitle">特工就绪</h2>
+          <p id="overlayText">方向键 / WASD 操控特工<br>吞噬技能球，击败回合<br>手机上滑动屏幕移动</p>
+          <button id="overlayBtn" class="btn">
+            <span>进入战局</span>
+          </button>
+          <p class="hint">SPACE 暂停 &nbsp;/&nbsp; R 重新部署</p>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>GITHUB + VERCEL 部署作业 · <a href="https://vercel.com" target="_blank" rel="noopener">DEPLOY NOW ▲</a></p>
+    </footer>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
