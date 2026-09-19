@@ -1,0 +1,282 @@
+/* ============================================================
+ * VALORANT SNAKE · 无畏契约风格
+ * 配色：#0F1923 暗夜蓝 / #FF4655 战术红 / #ECE8E1 象牙白
+ * ============================================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #0f1923;
+  --bg2: #101823;
+  --panel: #1b2733;
+  --red: #ff4655;
+  --red-dark: #bd3940;
+  --white: #ece8e1;
+  --dim: #768079;
+  --cyan: #37c8f0;
+}
+
+body {
+  font-family: "Teko", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--white);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ===== 背景战术网格 ===== */
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 70, 85, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 70, 85, 0.045) 1px, transparent 1px);
+  background-size: 44px 44px;
+  pointer-events: none;
+}
+
+.bg-grid::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 30%, transparent 30%, rgba(15, 25, 35, 0.9) 100%);
+}
+
+/* ===== 布局 ===== */
+.wrapper {
+  width: 100%;
+  max-width: 470px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== 头部 ===== */
+header {
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.logo-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* 标志性 V 形 logo */
+.logo-icon {
+  width: 0;
+  height: 0;
+  border-left: 16px solid transparent;
+  border-right: 16px solid transparent;
+  border-bottom: 26px solid var(--red);
+  filter: drop-shadow(0 0 6px rgba(255, 70, 85, 0.55));
+}
+
+h1 {
+  font-size: 44px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  line-height: 1;
+  color: var(--white);
+  transform: skewX(-8deg);
+}
+
+h1 em {
+  font-style: normal;
+  color: var(--red);
+}
+
+.subtitle {
+  color: var(--dim);
+  font-size: 15px;
+  letter-spacing: 3px;
+  margin-top: 4px;
+}
+
+/* ===== HUD 记分板 ===== */
+.hud {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.hud-item {
+  flex: 1;
+  background: var(--panel);
+  padding: 6px 12px 8px;
+  text-align: center;
+  border: 1px solid rgba(236, 232, 225, 0.14);
+  position: relative;
+}
+
+/* 斜切角：左卡切左上，右卡切右下 */
+.clip-l { clip-path: polygon(14px 0, 100% 0, 100% 100%, 0 100%, 0 14px); }
+.clip-r { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%); }
+
+.hud-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  color: var(--dim);
+  text-transform: uppercase;
+}
+
+.hud-value {
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--white);
+  font-variant-numeric: tabular-nums;
+}
+
+.hud-item:first-child .hud-value { color: var(--red); }
+
+/* ===== 游戏区 ===== */
+.stage {
+  position: relative;
+  border: 1px solid rgba(236, 232, 225, 0.18);
+  box-shadow: 0 14px 50px rgba(0, 0, 0, 0.6), 0 0 0 6px rgba(15, 25, 35, 0.6);
+  touch-action: none; /* 移动端手势交给游戏处理 */
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--bg2);
+}
+
+/* 四角战术括号 */
+.corner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.corner::before,
+.corner::after {
+  content: "";
+  position: absolute;
+  background: var(--red);
+}
+
+.corner::before { width: 100%; height: 3px; }
+.corner::after { width: 3px; height: 100%; }
+
+.corner.tl { top: -2px; left: -2px; }
+.corner.tr { top: -2px; right: -2px; transform: scaleX(-1); }
+.corner.bl { bottom: -2px; left: -2px; transform: scaleY(-1); }
+.corner.br { bottom: -2px; right: -2px; transform: scale(-1); }
+
+/* ===== 遮罩层 ===== */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg, rgba(15, 25, 35, 0.86) 0 3px, rgba(18, 29, 42, 0.86) 3px 6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.overlay.hidden { display: none; }
+
+.overlay-card {
+  text-align: center;
+  padding: 24px;
+  animation: cardIn 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(14px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+.overlay-tag {
+  display: inline-block;
+  font-size: 14px;
+  letter-spacing: 3px;
+  color: var(--cyan);
+  margin-bottom: 6px;
+}
+
+.overlay-card h2 {
+  font-size: 46px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  line-height: 1;
+  color: var(--white);
+  transform: skewX(-8deg);
+  text-shadow: 0 0 24px rgba(255, 70, 85, 0.35);
+}
+
+.overlay-card h2.danger {
+  color: var(--red);
+  text-shadow: 0 0 30px rgba(255, 70, 85, 0.6);
+}
+
+.overlay-card p {
+  color: #aab4ae;
+  line-height: 1.6;
+  font-size: 17px;
+  margin-top: 8px;
+  letter-spacing: 1px;
+}
+
+.overlay-card .hint {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--dim);
+  letter-spacing: 2px;
+}
+
+/* 按钮：斜切红块 */
+.btn {
+  margin-top: 20px;
+  display: inline-block;
+  padding: 10px 44px 12px;
+  background: var(--red);
+  clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+  border: none;
+  cursor: pointer;
+  transition: filter 0.15s, transform 0.1s;
+}
+
+.btn span {
+  font-family: inherit;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  color: #fff;
+}
+
+.btn:hover { filter: brightness(1.15); }
+.btn:active { transform: scale(0.96); }
+
+/* ===== 页脚 ===== */
+footer {
+  text-align: center;
+  margin-top: 14px;
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: var(--dim);
+}
+
+footer a {
+  color: var(--white);
+  text-decoration: none;
+  border-bottom: 1px solid var(--red);
+}
